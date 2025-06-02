@@ -1,14 +1,14 @@
 import React from "react";
 
-interface Props {
-  title: string;   
-  artist: string;
+interface IProps {
+  title?: string;   
+  artist?: string;
   cover?: string;
   duration?: number;
   skeleton?: boolean;
 }
 
-const TrackCard: React.FC<Props> = ({ 
+const TrackCard: React.FC<IProps> = ({ 
   title,
   artist,
   cover,
@@ -24,19 +24,26 @@ const TrackCard: React.FC<Props> = ({
     );
   }
 
+  if (!title || !artist) {
+    return null;
+  }
+
   return (
     <div className="track-item">
       <img 
-        src={cover || '/placeholder-track.png'} 
+        src={cover || '/img/placeholder-track.png'} 
         alt={title} 
         className="track-cover"
+        onError={(e) => {
+          (e.target as HTMLImageElement).src = '/img/placeholder-track.png';
+        }}
       />
       <div className="track-info">
         <h3>{title}</h3>
         <p>{artist}</p>
-        {duration && (
+        {duration && duration > 0 && (
           <span className="duration">
-Math.floor(duration / 60):{(duration % 60).toString().padStart(2, '0')}
+            {Math.floor(duration / 60)}:{(duration % 60).toString().padStart(2, '0')}
           </span>
         )}
       </div>
